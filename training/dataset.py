@@ -194,6 +194,7 @@ def load_dataset(class_name=None, data_dir=None, verbose=False, **kwargs):
         print('Dataset shape =', np.int32(dataset.shape).tolist())
         print('Dynamic range =', dataset.dynamic_range)
         print('Label size    =', dataset.label_size)
+        print('Marker: 1')
     return dataset
 
 #----------------------------------------------------------------------------

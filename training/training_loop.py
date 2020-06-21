@@ -124,23 +124,33 @@ def training_loop(
     total_kimg              = 25000,    # Total length of the training, measured in thousands of real images.
     mirror_augment          = False,    # Enable mirror augment?
     drange_net              = [-1,1],   # Dynamic range used when feeding image data to the networks.
-    image_snapshot_ticks    = 50,       # How often to save image snapshots? None = only save 'reals.png' and 'fakes-init.png'.
-    network_snapshot_ticks  = 50,       # How often to save network snapshots? None = only save 'networks-final.pkl'.
+    image_snapshot_ticks    = 5,       # How often to save image snapshots? None = only save 'reals.png' and 'fakes-init.png'.
+    network_snapshot_ticks  = 5,       # How often to save network snapshots? None = only save 'networks-final.pkl'.
     save_tf_graph           = False,    # Include full TensorFlow computation graph in the tfevents file?
     save_weight_histograms  = False,    # Include weight histograms in the tfevents file?
-    resume_pkl              = None,     # Network pickle to resume training from, None = train from scratch.
+    # resume_pkl              = './results/00023-stylegan2-stylegan2_dataset-1gpu-config-f/network-snapshot-000180.pkl',     # Network pickle to resume training from, None = train from scratch.
+    resume_pkl              = None,
     resume_kimg             = 0.0,      # Assumed training progress at the beginning. Affects reporting and training schedule.
     resume_time             = 0.0,      # Assumed wallclock time at the beginning. Affects reporting.
     resume_with_new_nets    = False):   # Construct new networks according to G_args and D_args before resuming training?
 
+    image_snapshot_ticks = 5
+    network_snapshot_ticks = 5
+
+    print(f'How often to save image snapshots: {image_snapshot_ticks}')
+    print(f'How often to save network snapshots: {network_snapshot_ticks}')
     # Initialize dnnlib and TensorFlow.
     tflib.init_tf(tf_config)
     num_gpus = dnnlib.submit_config.num_gpus
+    print(f'Number of GPUs: {num_gpus}')
+
 
     # Load training set.
     training_set = dataset.load_dataset(data_dir=dnnlib.convert_path(data_dir), verbose=True, **dataset_args)
     grid_size, grid_reals, grid_labels = misc.setup_snapshot_image_grid(training_set, **grid_args)
     misc.save_image_grid(grid_reals, dnnlib.make_run_dir_path('reals.png'), drange=training_set.dynamic_range, grid_size=grid_size)
+
+    print(f'resume_pkl: {resume_pkl}')
 
     # Construct or load networks.
     with tf.device('/gpu:0'):

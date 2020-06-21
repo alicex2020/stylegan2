@@ -308,7 +308,7 @@ def G_synthesis_stylegan_revised(
     dlatents_in,                        # Input: Disentangled latents (W) [minibatch, num_layers, dlatent_size].
     dlatent_size        = 512,          # Disentangled latent (W) dimensionality.
     num_channels        = 3,            # Number of output color channels.
-    resolution          = 1024,         # Output resolution.
+    resolution          = 512,         # Output resolution.
     fmap_base           = 16 << 10,     # Overall multiplier for the number of feature maps.
     fmap_decay          = 1.0,          # log2 feature map reduction when doubling the resolution.
     fmap_min            = 1,            # Minimum number of feature maps in any layer.
@@ -418,7 +418,7 @@ def G_synthesis_stylegan2(
     dlatents_in,                        # Input: Disentangled latents (W) [minibatch, num_layers, dlatent_size].
     dlatent_size        = 512,          # Disentangled latent (W) dimensionality.
     num_channels        = 3,            # Number of output color channels.
-    resolution          = 1024,         # Output resolution.
+    resolution          = 512,         # Output resolution.
     fmap_base           = 16 << 10,     # Overall multiplier for the number of feature maps.
     fmap_decay          = 1.0,          # log2 feature map reduction when doubling the resolution.
     fmap_min            = 1,            # Minimum number of feature maps in any layer.
@@ -513,7 +513,7 @@ def D_stylegan(
     images_in,                          # First input: Images [minibatch, channel, height, width].
     labels_in,                          # Second input: Labels [minibatch, label_size].
     num_channels        = 3,            # Number of input color channels. Overridden based on dataset.
-    resolution          = 1024,         # Input resolution. Overridden based on dataset.
+    resolution          = 512,         # Input resolution. Overridden based on dataset.
     label_size          = 0,            # Dimensionality of the labels, 0 if no labels. Overridden based on dataset.
     fmap_base           = 16 << 10,     # Overall multiplier for the number of feature maps.
     fmap_decay          = 1.0,          # log2 feature map reduction when doubling the resolution.
@@ -535,6 +535,7 @@ def D_stylegan(
     act = nonlinearity
 
     images_in.set_shape([None, num_channels, resolution, resolution])
+    print(images_in.shape)
     labels_in.set_shape([None, label_size])
     images_in = tf.cast(images_in, dtype)
     labels_in = tf.cast(labels_in, dtype)
@@ -614,7 +615,7 @@ def D_stylegan2(
     images_in,                          # First input: Images [minibatch, channel, height, width].
     labels_in,                          # Second input: Labels [minibatch, label_size].
     num_channels        = 3,            # Number of input color channels. Overridden based on dataset.
-    resolution          = 1024,         # Input resolution. Overridden based on dataset.
+    resolution          = 512,          # Input resolution. Overridden based on dataset.
     label_size          = 0,            # Dimensionality of the labels, 0 if no labels. Overridden based on dataset.
     fmap_base           = 16 << 10,     # Overall multiplier for the number of feature maps.
     fmap_decay          = 1.0,          # log2 feature map reduction when doubling the resolution.
@@ -634,7 +635,8 @@ def D_stylegan2(
     assert architecture in ['orig', 'skip', 'resnet']
     act = nonlinearity
 
-    images_in.set_shape([None, num_channels, resolution, resolution])
+    # images_in.set_shape([None, num_channels, resolution, resolution])
+    images_in.set_shape([None, num_channels, 512, 512])
     labels_in.set_shape([None, label_size])
     images_in = tf.cast(images_in, dtype)
     labels_in = tf.cast(labels_in, dtype)
