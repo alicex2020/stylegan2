@@ -95,7 +95,7 @@ class SubmitConfig(util.EasyDict):
 
         # submit (set these)
         self.submit_target = SubmitTarget.LOCAL
-        self.num_gpus = 1
+        self.num_gpus = 4
         self.print_info = False
         self.nvprof = False
         self.local = internal.local.TargetOptions()
@@ -203,7 +203,8 @@ def _create_run_dir_local(submit_config: SubmitConfig) -> str:
     if os.path.exists(run_dir):
         raise RuntimeError("The run dir already exists! ({0})".format(run_dir))
 
-    os.makedirs(run_dir)
+    else: 
+        os.makedirs(run_dir)
 
     return run_dir
 
@@ -333,6 +334,7 @@ def submit_run(submit_config: SubmitConfig, run_func_name: str, **run_func_kwarg
     host_run_dir = _create_run_dir_local(submit_config)
 
     submit_config.task_name = "{0}-{1:05d}-{2}".format(submit_config.user_name, submit_config.run_id, submit_config.run_desc)
+    print(submit_config.task_name)
     docker_valid_name_regex = "^[a-zA-Z0-9][a-zA-Z0-9_.-]+$"
     if not re.match(docker_valid_name_regex, submit_config.task_name):
         raise RuntimeError("Invalid task name.  Probable reason: unacceptable characters in your submit_config.run_desc.  Task name must be accepted by the following regex: " + docker_valid_name_regex + ", got " + submit_config.task_name)
