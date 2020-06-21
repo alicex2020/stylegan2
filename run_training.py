@@ -58,10 +58,11 @@ def run(dataset, data_dir, result_dir, config_id, num_gpus, total_kimg, gamma, m
     desc = 'stylegan2'
 
     desc += '-' + dataset
-    dataset_args = EasyDict(tfrecord_dir=dataset)
+    dataset_args = EasyDict(tfrecord_dir=dataset, resolution=512)
 
     assert num_gpus in [1, 2, 4, 8]
     sc.num_gpus = num_gpus
+    print(f'run_training: num_gpus = {num_gpus}')
     desc += '-%dgpu' % num_gpus
 
     assert config_id in _valid_configs
